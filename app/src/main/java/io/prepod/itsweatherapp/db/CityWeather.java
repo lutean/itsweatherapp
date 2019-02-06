@@ -14,12 +14,15 @@ public class CityWeather {
     private String description;
     private long date;
 
-    @Ignore
     public CityWeather(String cityName, String temp, String description, long date) {
         this.cityName = cityName;
         this.temp = temp;
         this.description = description;
         this.date = date;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getId() {

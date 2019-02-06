@@ -4,6 +4,7 @@ import javax.inject.Inject;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
+import io.prepod.itsweatherapp.ItsWeatherApp;
 import io.prepod.itsweatherapp.WeatherRepository;
 import io.prepod.itsweatherapp.containers.WeatherByName;
 
@@ -12,6 +13,10 @@ public class WeatherViewModel extends ViewModel {
     private LiveData<WeatherByName> weatherByName;
 
     private WeatherRepository weatherRepository;
+
+    public WeatherViewModel(){
+        ItsWeatherApp.getAppComponent().inject(this);
+    }
 
     @Inject
     public WeatherViewModel(WeatherRepository weatherRepository) {

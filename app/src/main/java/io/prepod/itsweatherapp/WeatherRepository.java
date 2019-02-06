@@ -27,8 +27,13 @@ public class WeatherRepository {
     private WeatherDao weatherDao;
     private Executor executor;
 
+    public WeatherRepository(){
+        ItsWeatherApp.getAppComponent().inject(this);
+    }
+
     @Inject
-    public WeatherRepository(WebApi webApi, WeatherDao weatherDao, Executor executor) {
+    public WeatherRepository(WebApi webApi, WeatherDao weatherDao, DispatchThread dispatchThread) {
+        this();
     /*    ItsWeatherApp.getAppComponent().inject(this);
         if (webApi != null){
             Log.i("My!", "onCreate: ");
