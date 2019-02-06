@@ -1,10 +1,12 @@
-package io.prepod.itsweatherapp;
+package io.prepod.itsweatherapp.di;
 
 import java.util.concurrent.TimeUnit;
 
 import dagger.Module;
 import dagger.Provides;
 import dagger.Reusable;
+import io.prepod.itsweatherapp.Config;
+import io.prepod.itsweatherapp.WebApi;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;

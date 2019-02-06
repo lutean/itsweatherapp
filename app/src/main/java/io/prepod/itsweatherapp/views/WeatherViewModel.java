@@ -1,19 +1,29 @@
 package io.prepod.itsweatherapp.views;
 
+import javax.inject.Inject;
+
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
-import io.prepod.itsweatherapp.containers.City;
+import io.prepod.itsweatherapp.WeatherRepository;
+import io.prepod.itsweatherapp.containers.WeatherByName;
 
 public class WeatherViewModel extends ViewModel {
 
-    private String cityName;
-    private City city;
+    private LiveData<WeatherByName> weatherByName;
 
+    private WeatherRepository weatherRepository;
 
-    public void init(String cityName){
-        this.cityName = cityName;
+    @Inject
+    public WeatherViewModel(WeatherRepository weatherRepository) {
+        this.weatherRepository = weatherRepository;
     }
 
-    public City getCity() {
-        return city;
+    public void init(String cityName){
+        if (this.weatherByName != null) return;
+        weatherByName = weatherRepository.getWeatherByName(cityName);
+    }
+
+    public LiveData<WeatherByName> getCity() {
+        return weatherByName;
     }
 }
