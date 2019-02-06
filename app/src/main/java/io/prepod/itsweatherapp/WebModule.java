@@ -1,7 +1,5 @@
 package io.prepod.itsweatherapp;
 
-import android.webkit.WebView;
-
 import java.util.concurrent.TimeUnit;
 
 import dagger.Module;
