@@ -1,6 +1,7 @@
 package io.prepod.itsweatherapp.db;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity
@@ -12,6 +13,14 @@ public class CityWeather {
     private String temp;
     private String description;
     private long date;
+
+    @Ignore
+    public CityWeather(String cityName, String temp, String description, long date) {
+        this.cityName = cityName;
+        this.temp = temp;
+        this.description = description;
+        this.date = date;
+    }
 
     public int getId() {
         return id;

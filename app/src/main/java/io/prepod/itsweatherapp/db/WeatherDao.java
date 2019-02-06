@@ -11,6 +11,8 @@ public interface WeatherDao {
     void saveWeather(CityWeather cityWeather);
 
     @Query("SELECT * FROM cityweather WHERE cityName = :cityName")
-    LiveData<CityWeather> loadWeather(String cityName);
+    LiveData<CityWeather> loadWeatherLiveData(String cityName);
 
+    @Query("SELECT * FROM cityweather WHERE cityName = :cityName")
+    CityWeather loadWeather(String cityName);
 }
