@@ -25,7 +25,7 @@ public class WeatherRepository {
     private WeatherCache weatherCache;
     private WebApi webApi;
     private WeatherDao weatherDao;
-    private Executor executor;
+    private DispatchThread dispatchThread;
 
     public WeatherRepository(){
         ItsWeatherApp.getAppComponent().inject(this);
@@ -40,6 +40,7 @@ public class WeatherRepository {
         }*/
         this.webApi = webApi;
         this.weatherDao = weatherDao;
+        this.dispatchThread = dispatchThread;
     }
 
     public LiveData<WeatherByName> getWeatherByName(String cityName) {
@@ -64,7 +65,7 @@ public class WeatherRepository {
     }
 
     private void updateWeather(String cityName) {
-        executor.execute(() -> {
+        dispatchThread.postRunnable(() -> {
 
             if (!isFreshWeather(weatherDao.loadWeather(cityName))) {
 
