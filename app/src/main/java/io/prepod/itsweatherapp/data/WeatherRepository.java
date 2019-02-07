@@ -42,9 +42,7 @@ public class WeatherRepository {
 
     private void updateWeather(String cityName) {
         dispatchThread.postRunnable(() -> {
-
             if (!isFreshWeather(weatherDao.loadWeather(cityName))) {
-
                 try {
                     Response<WeatherByName> response = webApi.getWeatherByName(cityName).execute();
                     //TODO error handle

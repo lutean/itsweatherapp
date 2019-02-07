@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.prepod.itsweatherapp.ItsWeatherApp;
 import io.prepod.itsweatherapp.R;
 import io.prepod.itsweatherapp.data.entities.CityWeather;
@@ -19,13 +20,16 @@ import android.widget.TextView;
 import javax.inject.Inject;
 
 
-public class WeatherFragment extends Fragment {
+public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private static final String CITY_PARAM = "cityName";
 
     private TextView temperatureTxt;
     private TextView weatherDescriptionTxt;
     private TextView nameOfCityTxt;
+    private SwipeRefreshLayout swipeRefreshLayout;
+
+    private String cityName;
 
     @Inject
     ViewModelFactory viewModelFactory;
@@ -52,9 +56,9 @@ public class WeatherFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (getArguments() != null) {
-            String cityName = getArguments().getString(CITY_PARAM);
+            cityName = getArguments().getString(CITY_PARAM);
             viewModel = ViewModelProviders.of(this, viewModelFactory).get(WeatherViewModel.class);
-            viewModel.init(cityName);
+            viewModel.getWeatherByName(cityName);
             viewModel.getCity().observe(this, this::fillViews);
         }
     }
@@ -67,6 +71,8 @@ public class WeatherFragment extends Fragment {
         temperatureTxt = v.findViewById(R.id.text_weather_temperature);
         weatherDescriptionTxt = v.findViewById(R.id.text_weather_description);
         nameOfCityTxt = v.findViewById(R.id.text_weather_city);
+        swipeRefreshLayout = v.findViewById(R.id.swipe_container);
+        swipeRefreshLayout.setOnRefreshListener(this);
         return v;
     }
 
@@ -85,9 +91,14 @@ public class WeatherFragment extends Fragment {
 
     private void fillViews(CityWeather weather) {
         if (weather == null) return;
+        swipeRefreshLayout.setRefreshing(false);
         temperatureTxt.setText(String.valueOf(Math.round(weather.getTemp())));
         weatherDescriptionTxt.setText(weather.getDescription());
         nameOfCityTxt.setText(weather.getCityName());
     }
 
+    @Override
+    public void onRefresh() {
+        viewModel.getWeatherByName(cityName);
+    }
 }
