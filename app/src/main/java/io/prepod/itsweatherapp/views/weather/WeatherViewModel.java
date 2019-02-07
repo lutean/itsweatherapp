@@ -1,4 +1,4 @@
-package io.prepod.itsweatherapp.views;
+package io.prepod.itsweatherapp.views.weather;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -11,11 +11,8 @@ import javax.inject.Inject;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 import dagger.MapKey;
-import io.prepod.itsweatherapp.ItsWeatherApp;
-import io.prepod.itsweatherapp.WeatherRepository;
-import io.prepod.itsweatherapp.containers.City;
-import io.prepod.itsweatherapp.containers.WeatherByName;
-import io.prepod.itsweatherapp.db.CityWeather;
+import io.prepod.itsweatherapp.data.WeatherRepository;
+import io.prepod.itsweatherapp.data.entities.CityWeather;
 
 public class WeatherViewModel extends ViewModel {
 

@@ -1,19 +1,15 @@
-package io.prepod.itsweatherapp.views;
+package io.prepod.itsweatherapp.views.weather;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import io.prepod.itsweatherapp.ItsWeatherApp;
 import io.prepod.itsweatherapp.R;
 import io.prepod.itsweatherapp.di.ViewModelFactory;
-import io.prepod.itsweatherapp.di.ViewModelModule;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,10 +51,8 @@ public class WeatherFragment extends Fragment {
         if (getArguments() != null) {
             String cityName = getArguments().getString(CITY_PARAM);
             viewModel = ViewModelProviders.of(this, viewModelFactory).get(WeatherViewModel.class);
-//            viewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
             viewModel.init(cityName);
             viewModel.getCity().observe(this, city -> {
-                Log.i("My!", "onActivityCreated: " + city);
                 if (city != null)
                     temperatureTxt.setText(city.getCityName() + " " + city.getTemp() + " " + city.getDescription());
             });

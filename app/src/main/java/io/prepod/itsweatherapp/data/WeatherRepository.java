@@ -1,4 +1,4 @@
-package io.prepod.itsweatherapp;
+package io.prepod.itsweatherapp.data;
 
 import java.io.IOException;
 
@@ -6,9 +6,12 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import androidx.lifecycle.LiveData;
+import io.prepod.itsweatherapp.DispatchThread;
+import io.prepod.itsweatherapp.ItsWeatherApp;
+import io.prepod.itsweatherapp.WebApi;
 import io.prepod.itsweatherapp.containers.WeatherByName;
-import io.prepod.itsweatherapp.db.CityWeather;
-import io.prepod.itsweatherapp.db.WeatherDao;
+import io.prepod.itsweatherapp.data.dao.WeatherDao;
+import io.prepod.itsweatherapp.data.entities.CityWeather;
 import retrofit2.Response;
 
 @Singleton
@@ -16,7 +19,6 @@ public class WeatherRepository {
 
     private final int FRESH_TIME = 60 * 1000;
 
-    private WeatherCache weatherCache;
     private WebApi webApi;
     private WeatherDao weatherDao;
     private DispatchThread dispatchThread;

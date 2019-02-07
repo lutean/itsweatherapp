@@ -1,17 +1,13 @@
-package io.prepod.itsweatherapp;
+package io.prepod.itsweatherapp.views;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import io.prepod.itsweatherapp.containers.Weather;
-import io.prepod.itsweatherapp.views.WeatherFragment;
-import retrofit2.Retrofit;
+import io.prepod.itsweatherapp.R;
+import io.prepod.itsweatherapp.views.weather.WeatherFragment;
 
 import android.os.Bundle;
-import android.util.Log;
-
-import javax.inject.Inject;
 
 public class MainActivity extends AppCompatActivity {
 

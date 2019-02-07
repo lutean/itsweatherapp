@@ -1,10 +1,11 @@
-package io.prepod.itsweatherapp.db;
+package io.prepod.itsweatherapp.data.dao;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import io.prepod.itsweatherapp.data.entities.CityWeather;
 
 @Dao
 public interface WeatherDao {

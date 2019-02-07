@@ -5,8 +5,8 @@ import javax.inject.Inject;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
-import io.prepod.itsweatherapp.WeatherRepository;
-import io.prepod.itsweatherapp.views.WeatherViewModel;
+import io.prepod.itsweatherapp.data.WeatherRepository;
+import io.prepod.itsweatherapp.views.weather.WeatherViewModel;
 
 public class ViewModelFactory implements ViewModelProvider.Factory {
 

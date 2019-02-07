@@ -3,10 +3,10 @@ package io.prepod.itsweatherapp.di;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import io.prepod.itsweatherapp.MainActivity;
-import io.prepod.itsweatherapp.WeatherRepository;
-import io.prepod.itsweatherapp.views.WeatherFragment;
-import io.prepod.itsweatherapp.views.WeatherViewModel;
+import io.prepod.itsweatherapp.views.MainActivity;
+import io.prepod.itsweatherapp.data.WeatherRepository;
+import io.prepod.itsweatherapp.views.weather.WeatherFragment;
+import io.prepod.itsweatherapp.views.weather.WeatherViewModel;
 
 @Singleton
 @Component(modules = {WebModule.class,
