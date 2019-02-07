@@ -8,21 +8,29 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+import io.prepod.itsweatherapp.ItsWeatherApp;
 import io.prepod.itsweatherapp.R;
+import io.prepod.itsweatherapp.di.ViewModelFactory;
+import io.prepod.itsweatherapp.di.ViewModelModule;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import javax.inject.Inject;
 
 
 public class WeatherFragment extends Fragment {
 
     private static final String CITY_PARAM = "cityName";
 
+    @Inject
+    ViewModelFactory viewModelFactory;
+
     private WeatherViewModel viewModel;
 
     public WeatherFragment() {
-
     }
 
     public static WeatherFragment newInstance(String cityName) {
@@ -43,10 +51,11 @@ public class WeatherFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         if (getArguments() != null) {
             String cityName = getArguments().getString(CITY_PARAM);
-            viewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
+            viewModel = ViewModelProviders.of(this, viewModelFactory).get(WeatherViewModel.class);
+//            viewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
             viewModel.init(cityName);
             viewModel.getCity().observe(this, city -> {
-
+                Log.i("My!", "onActivityCreated: " + city);
             });
         }
     }
@@ -62,7 +71,9 @@ public class WeatherFragment extends Fragment {
 
     @Override
     public void onAttach(Context context) {
+        ItsWeatherApp.getAppComponent().inject(this);
         super.onAttach(context);
+
     }
 
     @Override

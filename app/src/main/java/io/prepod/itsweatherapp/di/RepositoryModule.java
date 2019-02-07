@@ -38,7 +38,7 @@ public class RepositoryModule {
 
     @Provides
     @Singleton
-    public WeatherDao provideWeatherDao(){
+    public WeatherDao provideWeatherDao(WeatherDatabase weatherDatabase){
         return weatherDatabase.weatherDao();
     }
 

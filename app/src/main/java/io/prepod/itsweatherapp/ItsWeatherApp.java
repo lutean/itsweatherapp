@@ -7,6 +7,7 @@ import io.prepod.itsweatherapp.di.AppModule;
 import io.prepod.itsweatherapp.di.DaggerAppComponent;
 import io.prepod.itsweatherapp.di.RepositoryModule;
 import io.prepod.itsweatherapp.di.ThreadModule;
+import io.prepod.itsweatherapp.di.ViewModelModule;
 import io.prepod.itsweatherapp.di.WebModule;
 
 public class ItsWeatherApp extends Application {
@@ -21,6 +22,7 @@ public class ItsWeatherApp extends Application {
                 .repositoryModule(new RepositoryModule())
                 .webModule(new WebModule())
                 .threadModule(new ThreadModule())
+                .viewModelModule(new ViewModelModule())
                 .build();
     }
 
