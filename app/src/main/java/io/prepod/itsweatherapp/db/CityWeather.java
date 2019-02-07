@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey;
 @Entity
 public class CityWeather {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private int id;
     private String cityName;
     private String temp;

@@ -1,5 +1,8 @@
 package io.prepod.itsweatherapp.di;
 
+import android.util.Log;
+
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import dagger.Module;
@@ -7,7 +10,11 @@ import dagger.Provides;
 import dagger.Reusable;
 import io.prepod.itsweatherapp.Config;
 import io.prepod.itsweatherapp.WebApi;
+import okhttp3.HttpUrl;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -18,7 +25,7 @@ public class WebModule {
     @Provides
     @Reusable
     HttpLoggingInterceptor provideInterceptor(){
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor(message -> Log.i("OkHTTP", message));
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         return logging;
     }
@@ -31,6 +38,20 @@ public class WebModule {
                 .readTimeout(15, TimeUnit.SECONDS)
                 .writeTimeout(15, TimeUnit.SECONDS)
                 .addInterceptor(logging)
+                .addInterceptor(chain -> {
+                    Request original = chain.request();
+                    HttpUrl originalHttpUrl = original.url();
+
+                    HttpUrl url = originalHttpUrl.newBuilder()
+                            .addQueryParameter("appid", Config.API_KEY)
+                            .build();
+
+                    Request.Builder requestBuilder = original.newBuilder()
+                            .url(url);
+
+                    Request request = requestBuilder.build();
+                    return chain.proceed(request);
+                })
                 .build();
         return client;
     }

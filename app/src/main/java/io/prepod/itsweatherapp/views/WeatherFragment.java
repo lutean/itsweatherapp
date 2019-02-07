@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import javax.inject.Inject;
 
@@ -24,6 +25,8 @@ import javax.inject.Inject;
 public class WeatherFragment extends Fragment {
 
     private static final String CITY_PARAM = "cityName";
+
+    private TextView temperatureTxt;
 
     @Inject
     ViewModelFactory viewModelFactory;
@@ -56,6 +59,8 @@ public class WeatherFragment extends Fragment {
             viewModel.init(cityName);
             viewModel.getCity().observe(this, city -> {
                 Log.i("My!", "onActivityCreated: " + city);
+                if (city != null)
+                    temperatureTxt.setText(city.getCityName() + " " + city.getTemp() + " " + city.getDescription());
             });
         }
     }
@@ -64,7 +69,9 @@ public class WeatherFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_weather, container, false);
+        View v = inflater.inflate(R.layout.fragment_weather, container, false);
+        temperatureTxt = v.findViewById(R.id.text_weather);
+        return v;
     }
 
 

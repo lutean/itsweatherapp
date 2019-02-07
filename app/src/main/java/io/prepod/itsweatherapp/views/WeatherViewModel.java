@@ -13,7 +13,9 @@ import androidx.lifecycle.ViewModel;
 import dagger.MapKey;
 import io.prepod.itsweatherapp.ItsWeatherApp;
 import io.prepod.itsweatherapp.WeatherRepository;
+import io.prepod.itsweatherapp.containers.City;
 import io.prepod.itsweatherapp.containers.WeatherByName;
+import io.prepod.itsweatherapp.db.CityWeather;
 
 public class WeatherViewModel extends ViewModel {
 
@@ -25,7 +27,7 @@ public class WeatherViewModel extends ViewModel {
         Class<? extends ViewModel> value();
     }
 
-    private LiveData<WeatherByName> weatherByName;
+    private LiveData<CityWeather> weatherByName;
 
     private WeatherRepository weatherRepository;
 
@@ -43,7 +45,7 @@ public class WeatherViewModel extends ViewModel {
         weatherByName = weatherRepository.getWeatherByName(cityName);
     }
 
-    public LiveData<WeatherByName> getCity() {
+    public LiveData<CityWeather> getCity() {
         return weatherByName;
     }
 }

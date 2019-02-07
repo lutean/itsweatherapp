@@ -1,26 +1,20 @@
 package io.prepod.itsweatherapp;
 
-import android.util.Log;
-
 import java.io.IOException;
-import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import io.prepod.itsweatherapp.containers.WeatherByName;
 import io.prepod.itsweatherapp.db.CityWeather;
 import io.prepod.itsweatherapp.db.WeatherDao;
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 @Singleton
 public class WeatherRepository {
 
-    private final int FRESH_TIME = 60 * 1000 * 1000;
+    private final int FRESH_TIME = 60 * 1000;
 
     private WeatherCache weatherCache;
     private WebApi webApi;
@@ -43,12 +37,12 @@ public class WeatherRepository {
         this.dispatchThread = dispatchThread;
     }
 
-    public LiveData<WeatherByName> getWeatherByName(String cityName) {
-        LiveData<WeatherByName> cached = weatherCache.get(cityName);
-        if (cached != null) return cached;
+    public LiveData<CityWeather> getWeatherByName(String cityName) {
+/*        LiveData<WeatherByName> cached = weatherCache.get(cityName);
+        if (cached != null) return cached;*//*
 
         final MutableLiveData<WeatherByName> data = new MutableLiveData<>();
-        weatherCache.put(cityName, data);
+//        weatherCache.put(cityName, data);
 
         webApi.getWeatherByName(cityName).enqueue(new Callback<WeatherByName>() {
             @Override
@@ -58,10 +52,12 @@ public class WeatherRepository {
 
             @Override
             public void onFailure(Call<WeatherByName> call, Throwable t) {
-
+                Log.i("My!", "onFailure: ");
             }
         });
-        return data;
+        return data;*/
+        updateWeather(cityName);
+        return weatherDao.loadWeatherLiveData(cityName);
     }
 
     private void updateWeather(String cityName) {
@@ -71,6 +67,7 @@ public class WeatherRepository {
 
                 try {
                     Response<WeatherByName> response = webApi.getWeatherByName(cityName).execute();
+                    //TODO error handle
                     weatherDao.saveWeather(transformWeatherData(response.body()));
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -81,6 +78,7 @@ public class WeatherRepository {
     }
 
     private boolean isFreshWeather(CityWeather cityWeather) {
+        if (cityWeather == null) return false;
         long date = cityWeather.getDate();
         return System.currentTimeMillis() - date <= FRESH_TIME;
     }

@@ -7,7 +7,7 @@ import retrofit2.http.Query;
 
 public interface WebApi {
 
-    @GET("data/2.5/weather")
+    @GET("data/2.5/weather?units=metric")
     Call<WeatherByName> getWeatherByName(@Query("q") String cityName);
 
 }
