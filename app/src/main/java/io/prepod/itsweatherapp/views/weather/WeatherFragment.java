@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import io.prepod.itsweatherapp.ItsWeatherApp;
 import io.prepod.itsweatherapp.R;
+import io.prepod.itsweatherapp.data.entities.CityWeather;
 import io.prepod.itsweatherapp.di.ViewModelFactory;
 
 import android.view.LayoutInflater;
@@ -23,6 +24,8 @@ public class WeatherFragment extends Fragment {
     private static final String CITY_PARAM = "cityName";
 
     private TextView temperatureTxt;
+    private TextView weatherDescriptionTxt;
+    private TextView nameOfCityTxt;
 
     @Inject
     ViewModelFactory viewModelFactory;
@@ -52,10 +55,7 @@ public class WeatherFragment extends Fragment {
             String cityName = getArguments().getString(CITY_PARAM);
             viewModel = ViewModelProviders.of(this, viewModelFactory).get(WeatherViewModel.class);
             viewModel.init(cityName);
-            viewModel.getCity().observe(this, city -> {
-                if (city != null)
-                    temperatureTxt.setText(city.getCityName() + " " + city.getTemp() + " " + city.getDescription());
-            });
+            viewModel.getCity().observe(this, this::fillViews);
         }
     }
 
@@ -64,10 +64,11 @@ public class WeatherFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_weather, container, false);
-        temperatureTxt = v.findViewById(R.id.text_weather);
+        temperatureTxt = v.findViewById(R.id.text_weather_temperature);
+        weatherDescriptionTxt = v.findViewById(R.id.text_weather_description);
+        nameOfCityTxt = v.findViewById(R.id.text_weather_city);
         return v;
     }
-
 
 
     @Override
@@ -80,6 +81,13 @@ public class WeatherFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    private void fillViews(CityWeather weather) {
+        if (weather == null) return;
+        temperatureTxt.setText(String.valueOf(Math.round(weather.getTemp())));
+        weatherDescriptionTxt.setText(weather.getDescription());
+        nameOfCityTxt.setText(weather.getCityName());
     }
 
 }

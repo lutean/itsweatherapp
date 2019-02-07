@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="textsize_temp">100sp</dimen>
+    <dimen name="textsize_city">50sp</dimen>
+    <dimen name="textsize_desc">25sp</dimen>
+
+    
+</resources>

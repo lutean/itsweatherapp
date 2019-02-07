@@ -23,41 +23,19 @@ public class WeatherRepository {
     private WeatherDao weatherDao;
     private DispatchThread dispatchThread;
 
-    public WeatherRepository(){
+    public WeatherRepository() {
         ItsWeatherApp.getAppComponent().inject(this);
     }
 
     @Inject
     public WeatherRepository(WebApi webApi, WeatherDao weatherDao, DispatchThread dispatchThread) {
         this();
-    /*    ItsWeatherApp.getAppComponent().inject(this);
-        if (webApi != null){
-            Log.i("My!", "onCreate: ");
-        }*/
         this.webApi = webApi;
         this.weatherDao = weatherDao;
         this.dispatchThread = dispatchThread;
     }
 
     public LiveData<CityWeather> getWeatherByName(String cityName) {
-/*        LiveData<WeatherByName> cached = weatherCache.get(cityName);
-        if (cached != null) return cached;*//*
-
-        final MutableLiveData<WeatherByName> data = new MutableLiveData<>();
-//        weatherCache.put(cityName, data);
-
-        webApi.getWeatherByName(cityName).enqueue(new Callback<WeatherByName>() {
-            @Override
-            public void onResponse(Call<WeatherByName> call, Response<WeatherByName> response) {
-                data.setValue(response.body());
-            }
-
-            @Override
-            public void onFailure(Call<WeatherByName> call, Throwable t) {
-                Log.i("My!", "onFailure: ");
-            }
-        });
-        return data;*/
         updateWeather(cityName);
         return weatherDao.loadWeatherLiveData(cityName);
     }
@@ -88,7 +66,7 @@ public class WeatherRepository {
     private CityWeather transformWeatherData(WeatherByName weatherByName) {
         if (weatherByName == null) return null;
         return new CityWeather(weatherByName.getName(),
-                String.valueOf(weatherByName.getMain().getTemp()),
+                weatherByName.getMain().getTemp(),
                 weatherByName.getWeather().get(0).getDescription(),
                 weatherByName.getDt());
     }

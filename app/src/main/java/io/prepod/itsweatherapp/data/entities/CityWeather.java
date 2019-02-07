@@ -9,11 +9,11 @@ public class CityWeather {
     @PrimaryKey(autoGenerate = true)
     private int id;
     private String cityName;
-    private String temp;
+    private double temp;
     private String description;
     private long date;
 
-    public CityWeather(String cityName, String temp, String description, long date) {
+    public CityWeather(String cityName, double temp, String description, long date) {
         this.cityName = cityName;
         this.temp = temp;
         this.description = description;
@@ -36,11 +36,11 @@ public class CityWeather {
         this.cityName = cityName;
     }
 
-    public String getTemp() {
+    public double getTemp() {
         return temp;
     }
 
-    public void setTemp(String temp) {
+    public void setTemp(double temp) {
         this.temp = temp;
     }
 
