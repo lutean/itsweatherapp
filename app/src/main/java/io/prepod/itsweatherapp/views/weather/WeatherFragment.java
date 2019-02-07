@@ -20,14 +20,13 @@ import android.widget.TextView;
 import javax.inject.Inject;
 
 
-public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class WeatherFragment extends Fragment{
 
     private static final String CITY_PARAM = "cityName";
 
     private TextView temperatureTxt;
     private TextView weatherDescriptionTxt;
     private TextView nameOfCityTxt;
-    private SwipeRefreshLayout swipeRefreshLayout;
 
     private String cityName;
 
@@ -66,13 +65,10 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_weather, container, false);
         temperatureTxt = v.findViewById(R.id.text_weather_temperature);
         weatherDescriptionTxt = v.findViewById(R.id.text_weather_description);
         nameOfCityTxt = v.findViewById(R.id.text_weather_city);
-        swipeRefreshLayout = v.findViewById(R.id.swipe_container);
-        swipeRefreshLayout.setOnRefreshListener(this);
         return v;
     }
 
@@ -91,14 +87,9 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private void fillViews(CityWeather weather) {
         if (weather == null) return;
-        swipeRefreshLayout.setRefreshing(false);
         temperatureTxt.setText(String.valueOf(Math.round(weather.getTemp())));
         weatherDescriptionTxt.setText(weather.getDescription());
         nameOfCityTxt.setText(weather.getCityName());
     }
 
-    @Override
-    public void onRefresh() {
-        viewModel.getWeatherByName(cityName);
-    }
 }

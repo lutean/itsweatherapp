@@ -6,3 +6,5 @@ build/
 /app/app.iml
 app/build/
 local.properties
+.gradle/
+/ItsWeatherApp.iml
