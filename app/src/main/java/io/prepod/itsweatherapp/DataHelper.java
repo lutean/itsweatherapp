@@ -12,7 +12,7 @@ public abstract class DataHelper<T, R> {
 
     protected abstract void onFail(String message);
 
-    protected abstract void storeDate(R data);
+    protected abstract void storeData(R data);
 
     protected abstract boolean isFreshData(R data);
 
@@ -25,44 +25,35 @@ public abstract class DataHelper<T, R> {
 
     public DataHelper(DispatchThread dispatchThread) {
         this.dispatchThread = dispatchThread;
-        dispatchThread.execute(this::fetchData);
-    }
-
-    private void fetchData() {
         LiveData<R> restoredLiveData = loadFromStore();
-        dispatchThread.executeInMainThread(() -> {
-                result.addSource(restoredLiveData,
-                        data -> {
-                            if (!isFreshData(data)) {
-                                result.removeSource(restoredLiveData);
-                                dispatchThread.execute(() -> {
-                                    try {
-                                        Response<T> response = makeRequest();
-                                        if (response.isSuccessful()) {
-                                            storeDate(transformData(response.body()));
-                                            dispatchThread.executeInMainThread(() ->
-                                                    result.addSource(loadFromStore(), newData ->{
-                                                        if (newData != null)
-                                                            result.setValue(DataWithStatus.success(newData));
-                                                    }));
-                                        } else {
-                                            onError(restoredLiveData, response.message());
-                                        }
-                                    } catch (IOException e) {
-                                        onError(restoredLiveData, "");
-                                        e.printStackTrace();
-                                    }
-                                });
-                            }
-                        });});
+        result.addSource(restoredLiveData, data -> {
+            result.removeSource(restoredLiveData);
+            if (!isFreshData(data)){
+                fetchData(restoredLiveData);
+            }
+        });
     }
 
-    private void onError(LiveData<R> data, String message) {
-        dispatchThread.executeInMainThread(() -> result.addSource(data, newData -> result.setValue(DataWithStatus.error(newData, message))));
+    private void fetchData(LiveData<R> restoredData) {
+        dispatchThread.execute(() -> {
+            try {
+                Response<T> response = makeRequest();
+                if (response.isSuccessful()) {
+                    storeData(transformData(response.body()));
+                    dispatchThread.executeInMainThread(() -> result.addSource(loadFromStore(), r -> {
+                        if (r != null)
+                            result.setValue(new DataWithStatus<>(DataWithStatus.Status.SUCCESS, "", r));
+                    }));
+                } else {
+                    result.addSource(restoredData, r -> result.setValue(new DataWithStatus<>(DataWithStatus.Status.ERROR, "", r)));
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     public LiveData<DataWithStatus<R>> asLiveData() {
         return result;
     }
-
 }

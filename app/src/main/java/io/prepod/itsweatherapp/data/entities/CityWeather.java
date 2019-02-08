@@ -6,14 +6,15 @@ import androidx.room.PrimaryKey;
 @Entity
 public class CityWeather {
 
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     private int id;
     private String cityName;
     private double temp;
     private String description;
     private long date;
 
-    public CityWeather(String cityName, double temp, String description, long date) {
+    public CityWeather(int id, String cityName, double temp, String description, long date) {
+        this.id = id;
         this.cityName = cityName;
         this.temp = temp;
         this.description = description;

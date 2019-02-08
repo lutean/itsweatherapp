@@ -1,5 +1,7 @@
 package io.prepod.itsweatherapp.data;
 
+import android.util.Log;
+
 import java.io.IOException;
 
 import javax.inject.Inject;
@@ -11,6 +13,7 @@ import io.prepod.itsweatherapp.DispatchThread;
 import io.prepod.itsweatherapp.ItsWeatherApp;
 import io.prepod.itsweatherapp.DataHelper;
 import io.prepod.itsweatherapp.WebApi;
+import io.prepod.itsweatherapp.containers.City;
 import io.prepod.itsweatherapp.containers.WeatherByName;
 import io.prepod.itsweatherapp.data.dao.WeatherDao;
 import io.prepod.itsweatherapp.data.entities.CityWeather;
@@ -56,7 +59,7 @@ public class WeatherRepository {
             }
 
             @Override
-            protected void storeDate(CityWeather data) {
+            protected void storeData(CityWeather data) {
                 weatherDao.saveWeather(data);
             }
 
@@ -100,7 +103,8 @@ public class WeatherRepository {
 
     private CityWeather transformWeatherData(WeatherByName weatherByName) {
         if (weatherByName == null) return null;
-        return new CityWeather(weatherByName.getName(),
+        return new CityWeather(weatherByName.getSys().getId(),
+                weatherByName.getName().toLowerCase(),
                 weatherByName.getMain().getTemp(),
                 weatherByName.getWeather().get(0).getDescription(),
                 weatherByName.getDt());

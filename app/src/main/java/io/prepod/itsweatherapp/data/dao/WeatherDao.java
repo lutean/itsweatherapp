@@ -11,11 +11,11 @@ import io.prepod.itsweatherapp.data.entities.CityWeather;
 public interface WeatherDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void saveWeather(CityWeather cityWeather);
+    long saveWeather(CityWeather cityWeather);
 
-    @Query("SELECT * FROM cityweather WHERE cityName = :cityName")
+    @Query("SELECT * FROM CityWeather WHERE cityName = :cityName")
     LiveData<CityWeather> loadWeatherLiveData(String cityName);
 
-    @Query("SELECT * FROM cityweather WHERE cityName = :cityName")
+    @Query("SELECT * FROM CityWeather WHERE cityName = :cityName")
     CityWeather loadWeather(String cityName);
 }

@@ -62,7 +62,9 @@ public class WeatherFragment extends Fragment {
         if (getArguments() != null) {
             cityName = getArguments().getString(CITY_PARAM);
             viewModel = ViewModelProviders.of(this, viewModelFactory).get(WeatherViewModel.class);
-            getDataAndObserve(cityName);
+            if (!TextUtils.isEmpty(cityName)) {
+                getDataAndObserve(cityName.toLowerCase());
+            }
         }
     }
 
