@@ -13,6 +13,7 @@ import io.prepod.itsweatherapp.R;
 import io.prepod.itsweatherapp.data.entities.CityWeather;
 import io.prepod.itsweatherapp.di.ViewModelFactory;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -103,6 +104,7 @@ public class WeatherFragment extends Fragment{
     }
 
     private void showMessage(String message){
+        if (TextUtils.isEmpty(message)) message = getString(R.string.error_common);
         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
     }
 
