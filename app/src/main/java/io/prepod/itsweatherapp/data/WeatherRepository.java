@@ -6,8 +6,10 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import androidx.lifecycle.LiveData;
+import io.prepod.itsweatherapp.DataWithStatus;
 import io.prepod.itsweatherapp.DispatchThread;
 import io.prepod.itsweatherapp.ItsWeatherApp;
+import io.prepod.itsweatherapp.DataHelper;
 import io.prepod.itsweatherapp.WebApi;
 import io.prepod.itsweatherapp.containers.WeatherByName;
 import io.prepod.itsweatherapp.data.dao.WeatherDao;
@@ -35,23 +37,58 @@ public class WeatherRepository {
         this.dispatchThread = dispatchThread;
     }
 
-    public LiveData<CityWeather> getWeatherByName(String cityName) {
+   /* public LiveData<CityWeather> getWeatherByName(String cityName) {
         updateWeather(cityName);
         return weatherDao.loadWeatherLiveData(cityName);
+    }*/
+
+    public LiveData<DataWithStatus<CityWeather>> getWeatherByName(String cityName) {
+        return new DataHelper<WeatherByName, CityWeather>(dispatchThread) {
+
+            @Override
+            protected Response<WeatherByName> makeRequest() throws IOException {
+                return webApi.getWeatherByName(cityName).execute();
+            }
+
+            @Override
+            protected void onFail(String message) {
+
+            }
+
+            @Override
+            protected void storeDate(CityWeather data) {
+                weatherDao.saveWeather(data);
+            }
+
+            @Override
+            protected boolean isFreshData(CityWeather cityWeather) {
+                return isFreshWeather(cityWeather);
+            }
+
+            @Override
+            protected CityWeather transformData(WeatherByName data) {
+                return transformWeatherData(data);
+            }
+
+            @Override
+            protected LiveData<CityWeather> loadFromStore() {
+                return weatherDao.loadWeatherLiveData(cityName);
+            }
+        }.asLiveData();
     }
 
     private void updateWeather(String cityName) {
-        dispatchThread.postRunnable(() -> {
+        dispatchThread.execute(() -> {
             if (!isFreshWeather(weatherDao.loadWeather(cityName))) {
                 try {
                     Response<WeatherByName> response = webApi.getWeatherByName(cityName).execute();
                     //TODO error handle
-                    weatherDao.saveWeather(transformWeatherData(response.body()));
+                    if (response.body() != null)
+                        weatherDao.saveWeather(transformWeatherData(response.body()));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-
         });
     }
 

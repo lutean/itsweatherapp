@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import io.prepod.itsweatherapp.DataWithStatus;
 import io.prepod.itsweatherapp.ItsWeatherApp;
 import io.prepod.itsweatherapp.R;
 import io.prepod.itsweatherapp.data.entities.CityWeather;
@@ -16,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import javax.inject.Inject;
 
@@ -85,11 +87,23 @@ public class WeatherFragment extends Fragment{
         super.onDetach();
     }
 
-    private void fillViews(CityWeather weather) {
-        if (weather == null) return;
-        temperatureTxt.setText(String.valueOf(Math.round(weather.getTemp())));
-        weatherDescriptionTxt.setText(weather.getDescription());
-        nameOfCityTxt.setText(weather.getCityName());
+    private void fillViews(DataWithStatus<CityWeather> weatherData) {
+        if (weatherData == null) return;
+        switch (weatherData.getStatus()){
+            case SUCCESS:
+                temperatureTxt.setText(String.valueOf(Math.round(weatherData.getData().getTemp())));
+                weatherDescriptionTxt.setText(weatherData.getData().getDescription());
+                nameOfCityTxt.setText(weatherData.getData().getCityName());
+                break;
+            case ERROR:
+                showMessage(weatherData.getMessage());
+                break;
+        }
+
+    }
+
+    private void showMessage(String message){
+        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
     }
 
 }
