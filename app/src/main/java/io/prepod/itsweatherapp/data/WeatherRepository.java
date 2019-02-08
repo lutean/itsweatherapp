@@ -46,11 +46,6 @@ public class WeatherRepository {
             }
 
             @Override
-            protected void onFail(String message) {
-
-            }
-
-            @Override
             protected void storeData(CityWeather data) {
                 weatherDao.saveWeather(data);
             }

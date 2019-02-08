@@ -10,8 +10,6 @@ public abstract class DataHelper<T, R> {
 
     protected abstract Response<T> makeRequest() throws IOException;
 
-    protected abstract void onFail(String message);
-
     protected abstract void storeData(R data);
 
     protected abstract boolean isFreshData(R data);
