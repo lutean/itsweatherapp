@@ -25,31 +25,36 @@ public abstract class DataHelper<T, R> {
 
     public DataHelper(DispatchThread dispatchThread) {
         this.dispatchThread = dispatchThread;
-        dispatchThread.execute(() -> fetchData());
+        dispatchThread.execute(this::fetchData);
     }
 
     private void fetchData() {
         LiveData<R> restoredLiveData = loadFromStore();
-        dispatchThread.executeInMainThread(() -> result.addSource(restoredLiveData, data -> {
-            if (!isFreshData(data)) {
-                result.removeSource(restoredLiveData);
-                dispatchThread.execute(() -> {
-                    try {
-                        Response<T> response = makeRequest();
-                        if (response.isSuccessful()) {
-                            storeDate(transformData(response.body()));
-                            dispatchThread.executeInMainThread(() ->
-                                    result.addSource(restoredLiveData, newData -> result.setValue(DataWithStatus.success(newData))));
-                        } else {
-                            onError(restoredLiveData, response.message());
-                        }
-                    } catch (IOException e) {
-                        onError(restoredLiveData, "");
-                        e.printStackTrace();
-                    }
-                });
-            }
-        }));
+        dispatchThread.executeInMainThread(() -> {
+                result.addSource(restoredLiveData,
+                        data -> {
+                            if (!isFreshData(data)) {
+                                result.removeSource(restoredLiveData);
+                                dispatchThread.execute(() -> {
+                                    try {
+                                        Response<T> response = makeRequest();
+                                        if (response.isSuccessful()) {
+                                            storeDate(transformData(response.body()));
+                                            dispatchThread.executeInMainThread(() ->
+                                                    result.addSource(loadFromStore(), newData ->{
+                                                        if (newData != null)
+                                                            result.setValue(DataWithStatus.success(newData));
+                                                    }));
+                                        } else {
+                                            onError(restoredLiveData, response.message());
+                                        }
+                                    } catch (IOException e) {
+                                        onError(restoredLiveData, "");
+                                        e.printStackTrace();
+                                    }
+                                });
+                            }
+                        });});
     }
 
     private void onError(LiveData<R> data, String message) {

@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">ItsWeatherApp</string>
 
+    <string name="hint_city">Find city …</string>
+    <string name="hint_findme">Find me</string>
     <string name="error_common">Something wrong</string>
 </resources>

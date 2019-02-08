@@ -20,7 +20,7 @@ public class WeatherViewModel extends ViewModel {
     }
 
     void getWeatherByName(String cityName){
-        if (this.weatherByName != null) return;
+//        if (this.weatherByName != null) return;
         weatherByName = weatherRepository.getWeatherByName(cityName);
     }
 
