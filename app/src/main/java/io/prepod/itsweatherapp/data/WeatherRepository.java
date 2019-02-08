@@ -1,19 +1,16 @@
 package io.prepod.itsweatherapp.data;
 
-import android.util.Log;
-
 import java.io.IOException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import androidx.lifecycle.LiveData;
+import io.prepod.itsweatherapp.DataHelper;
 import io.prepod.itsweatherapp.DataWithStatus;
 import io.prepod.itsweatherapp.DispatchThread;
 import io.prepod.itsweatherapp.ItsWeatherApp;
-import io.prepod.itsweatherapp.DataHelper;
 import io.prepod.itsweatherapp.WebApi;
-import io.prepod.itsweatherapp.containers.City;
 import io.prepod.itsweatherapp.containers.WeatherByName;
 import io.prepod.itsweatherapp.data.dao.WeatherDao;
 import io.prepod.itsweatherapp.data.entities.CityWeather;
@@ -39,11 +36,6 @@ public class WeatherRepository {
         this.weatherDao = weatherDao;
         this.dispatchThread = dispatchThread;
     }
-
-   /* public LiveData<CityWeather> getWeatherByName(String cityName) {
-        updateWeather(cityName);
-        return weatherDao.loadWeatherLiveData(cityName);
-    }*/
 
     public LiveData<DataWithStatus<CityWeather>> getWeatherByName(String cityName) {
         return new DataHelper<WeatherByName, CityWeather>(dispatchThread) {
@@ -78,21 +70,6 @@ public class WeatherRepository {
                 return weatherDao.loadWeatherLiveData(cityName);
             }
         }.asLiveData();
-    }
-
-    private void updateWeather(String cityName) {
-        dispatchThread.execute(() -> {
-            if (!isFreshWeather(weatherDao.loadWeather(cityName))) {
-                try {
-                    Response<WeatherByName> response = webApi.getWeatherByName(cityName).execute();
-                    //TODO error handle
-                    if (response.body() != null)
-                        weatherDao.saveWeather(transformWeatherData(response.body()));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
     }
 
     private boolean isFreshWeather(CityWeather cityWeather) {

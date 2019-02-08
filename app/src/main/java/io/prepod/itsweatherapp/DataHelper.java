@@ -1,11 +1,9 @@
 package io.prepod.itsweatherapp;
 
 import java.io.IOException;
-import java.util.Objects;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
-import androidx.room.Database;
 import retrofit2.Response;
 
 public abstract class DataHelper<T, R> {
