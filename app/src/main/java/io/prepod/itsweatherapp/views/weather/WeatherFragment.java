@@ -31,7 +31,6 @@ public class WeatherFragment extends Fragment {
     private TextView weatherDescriptionTxt;
     private TextView nameOfCityTxt;
     private EditText findCityEdit;
-    private TextView findMeBtn;
 
     private String cityName;
 
@@ -75,7 +74,6 @@ public class WeatherFragment extends Fragment {
         temperatureTxt = v.findViewById(R.id.text_weather_temperature);
         weatherDescriptionTxt = v.findViewById(R.id.text_weather_description);
         nameOfCityTxt = v.findViewById(R.id.text_weather_city);
-        findMeBtn = v.findViewById(R.id.btn_weather_findme);
         findCityEdit = v.findViewById(R.id.edit_weather_findcity);
         findCityEdit.setOnEditorActionListener((textView, i, keyEvent) -> {
             if (i == EditorInfo.IME_ACTION_DONE) {

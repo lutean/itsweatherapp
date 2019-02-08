@@ -23,7 +23,7 @@ public abstract class DataHelper<T, R> {
     private MediatorLiveData<DataWithStatus<R>> result = new MediatorLiveData<>();
     private DispatchThread dispatchThread;
 
-    public DataHelper(DispatchThread dispatchThread) {
+    protected DataHelper(DispatchThread dispatchThread) {
         this.dispatchThread = dispatchThread;
         LiveData<R> restoredLiveData = loadFromStore();
         result.addSource(restoredLiveData, data -> {

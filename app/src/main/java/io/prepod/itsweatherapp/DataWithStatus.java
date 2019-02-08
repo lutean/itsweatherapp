@@ -19,12 +19,11 @@ public class DataWithStatus<R> {
         return new DataWithStatus<R>(Status.ERROR,  message, data);
     }
 
-    public DataWithStatus(Status status, String message, R data) {
+    DataWithStatus(Status status, String message, R data) {
         this.status = status;
         this.message = message;
         this.data = data;
     }
-
 
     public Status getStatus() {
         return status;
