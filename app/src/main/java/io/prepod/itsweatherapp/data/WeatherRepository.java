@@ -103,7 +103,7 @@ public class WeatherRepository {
 
     private CityWeather transformWeatherData(WeatherByName weatherByName) {
         if (weatherByName == null) return null;
-        return new CityWeather(weatherByName.getSys().getId(),
+        return new CityWeather(weatherByName.getId(),
                 weatherByName.getName().toLowerCase(),
                 weatherByName.getMain().getTemp(),
                 weatherByName.getWeather().get(0).getDescription(),

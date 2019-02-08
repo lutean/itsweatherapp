@@ -86,6 +86,7 @@ public class WeatherFragment extends Fragment {
             }
             return false;
         });
+        findCityEdit.setOnClickListener(v1 -> findCityEdit.setText(""));
         return v;
     }
 

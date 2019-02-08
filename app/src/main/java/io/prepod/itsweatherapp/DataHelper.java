@@ -1,9 +1,11 @@
 package io.prepod.itsweatherapp;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
+import androidx.room.Database;
 import retrofit2.Response;
 
 public abstract class DataHelper<T, R> {
@@ -28,7 +30,7 @@ public abstract class DataHelper<T, R> {
         LiveData<R> restoredLiveData = loadFromStore();
         result.addSource(restoredLiveData, data -> {
             result.removeSource(restoredLiveData);
-            if (!isFreshData(data)){
+            if (!isFreshData(data)) {
                 fetchData(restoredLiveData);
             }
         });
@@ -38,17 +40,19 @@ public abstract class DataHelper<T, R> {
         dispatchThread.execute(() -> {
             try {
                 Response<T> response = makeRequest();
-                if (response.isSuccessful()) {
-                    storeData(transformData(response.body()));
-                    dispatchThread.executeInMainThread(() -> result.addSource(loadFromStore(), r -> {
-                        if (r != null)
-                            result.setValue(new DataWithStatus<>(DataWithStatus.Status.SUCCESS, "", r));
-                    }));
-                } else {
-                    result.addSource(restoredData, r -> result.setValue(new DataWithStatus<>(DataWithStatus.Status.ERROR, "", r)));
+                if (!response.isSuccessful()) {
+                    onError(restoredData, response.message());
+                    return;
                 }
+                storeData(transformData(response.body()));
+                LiveData<R> data = loadFromStore();
+                dispatchThread.executeInMainThread(() -> result.addSource(data, r -> {
+                    if (r != null)
+                        result.setValue(new DataWithStatus<>(DataWithStatus.Status.SUCCESS, "", r));
+                    result.removeSource(data);
+                }));
             } catch (IOException e) {
-                e.printStackTrace();
+                onError(restoredData, "");
             }
         });
     }
@@ -56,4 +60,9 @@ public abstract class DataHelper<T, R> {
     public LiveData<DataWithStatus<R>> asLiveData() {
         return result;
     }
+
+    private void onError(LiveData<R> restoredData, String message) {
+        dispatchThread.executeInMainThread(() -> result.addSource(restoredData, r -> result.setValue(new DataWithStatus<>(DataWithStatus.Status.ERROR, message, r))));
+    }
+
 }
